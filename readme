@@ -57,4 +57,36 @@ git commit -a -m "third commit"
 git push -u origin main
 git status
 
+deployment to ebs:
 Add '"start": "node app.js",' in package.json
+create ebs application "github_ebs_deployment"
+create ebs environment: "Githubebsdeployment-env"
+    platform "Docker"=>"Docker running on 64bit Amazon Linux 2"
+    EC2 instance role=>AWSElasticBeanstalkMulticontainerDocker,AWSElasticBeanstalkWebTier,
+     AWSElasticBeanstalkWorkerTier,ECRAccessPolicy
+
+     ECRAccessPolicy:
+     {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "ecr:GetDownloadUrlForLayer",
+              "ecr:BatchGetImage",
+              "ecr:BatchCheckLayerAvailability"
+            ],
+            "Resource": "arn:aws:ecr:ap-south-1:058264377207:repository/project_ebs_ecr"
+          },
+          {
+            "Effect": "Allow",
+            "Action": "ecr:GetAuthorizationToken",
+            "Resource": "*"
+          }
+        ]
+      }
+
+      ElasticBeanStalk service role:AWSElasticBeanstalkEnhancedHealth,AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy
+  Update main.yml file for EBS deployment
+  Update User Group "push_pull_images" (group name) permissions. Add permission "AdministratorAccess-AWSElasticBeanstalk" (So now 3 permissions will be attached to this group).
+  Now push to github
