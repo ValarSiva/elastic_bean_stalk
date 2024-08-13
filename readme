@@ -1,0 +1,60 @@
+create folder: "github_ebs"
+In cmd:
+D:/Docker/github_ebs>git clone git@github.com:/ValarSiva/elastic_bean_stalk
+D:/Docker/github_ebs/elastic_bean_stalk>git init
+D:/Docker/github_ebs/elastic_bean_stalk>git commit -m "first commit"
+D:/Docker/github_ebs/elastic_bean_stalk>git add .
+D:/Docker/github_ebs/elastic_bean_stalk>git commit -m "first commit"
+D:/Docker/github_ebs/elastic_bean_stalk>git push -u origin main
+In VS code: create "Dockerfile"
+Create folder ".github". create subfolder "workflow" under ".github".
+Create file "main.yml" under "workflow"
+create "build" folder.
+Create "git_update.sh" under "build"
+Create "app.js"
+Give "npm init -y" in terminal
+Give "npm install express"
+create ECR repo "github_action" (private) => "create repository"
+IAM=>Policies=>create policy=>json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "GetAuthorizationToken",
+      "Effect": "Allow",
+      "Action": [
+        "ecr:GetAuthorizationToken"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ecr:BatchGetImage",
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:CompleteLayerUpload",
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:InitiateLayerUpload",
+        "ecr:PutImage",
+        "ecr:UploadLayerPart"
+      ],
+      "Resource": [
+        "arn:aws:ecr:us-east-1:424432388155:repository/lesson-086"
+      ]
+    }
+  ]
+}
+Give policy name "AllowPushPullPolicy" => create policy
+IAM=>User Group=>create=>"push_pull_images" (group name) => Add permission ("AllowPushPullPolicy" 
+and "AmazonEC2ContainerRegistryFullAccess")
+IAM=>users=>Add_user=>"github_actions"(user name)=> "Add user to group"=>
+select "push_pull_images" group =>create user
+Create Accesskey id for this user(github_actions)
+Add secrets in github(settings=>secret variables=>actions=>new repository)
+git status
+git add .
+git commit -a -m "third commit"
+git push -u origin main
+git status
+
+Add '"start": "node app.js",' in package.json
